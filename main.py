@@ -12,7 +12,9 @@ posisi_awal = input("masukkan posisi awal anda: ")
 a = 0 
 for i in stasiun_MRT:
     a+=1
-    if posisi_awal == i:
+    if posisi_awal.lower() == i.lower():
         index_posisi_awal = a
 
+print(index_posisi_awal)
 
+# test branch merging from dev to main.
