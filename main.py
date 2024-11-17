@@ -4,16 +4,17 @@
 # Assumptions
 # - Jarak antar stasiun adalah 2km
 # - Tarif perjalanan adalah Rp4000 per 10km, artinya Rp800 per 2km
-# - Artinya, saldo minimum (untuk menempuh seluruh stasiun, yaitu 12 stasiun) yang dibutuhkan adalah 12xRp800 = Rp9600
+# - Saldo minimum (untuk menempuh seluruh stasiun, yaitu 12 stasiun) yang dibutuhkan pada kartu adalah Rp14000
 
 # Algoritma
 stations = ["Lebak Bulus Grab", "Fatmawati", "Cipete Raya", "Haji Nawi", "Blok A", "Blok M BCA", "ASEAN", "Senayan",
                 "Istora Mandiri", "Bendungan Hilir", "Setiabudi Astra", "Dukuh Atas BNI", "Bundaran HI"] #array stasiun mrt
 indeks = [161,198,162,165,190,199,196] #array nim TPB
-cards = []
+cards = [] #database id kartu dan saldonya
 
 # fungsi pembantu
-def findIndex(array, find): #input array dan item, output index item tsb dalam array 
+
+def findIndex(array, find): #input array dan item, output index item tersebut dalam array 
     index = 0
     for i in array:
         if find != i:
@@ -34,18 +35,18 @@ def kartuvalid(nomor_unik): #menentukan apakah 3 digit pertama id kartu merupaka
     for i in range(0, len(indeks)):
         if nomor_unik == indeks[i]:
             ada = True
-    return ada
+    return ada #output boolean (True / False) apakah kartu valid
 
-def cekidcard(cards, idcard):
+def cekidcard(cards, idcard): #memeriksa apakah kartu sudah ter-registrasi
     ada = False
     y = 0
     for i in range(0, len(cards)):
         if cards[i][0] == idcard:
             ada = True
             y = i
-    return [ada, y]
+    return [ada, y] #output boolean dan indeks id card 
 
-def cekntopup(cards):
+def cekntopup_card(cards):
     if len(cards) != 0:
         print("\nID Card : Nominal")
         for i in range(0, len(cards)):
@@ -86,7 +87,7 @@ def cardReader(idCard, cards):
         return [False, "\nKartu belum terdaftar"], cards
 
 def gate(idCard, cards):
-    startLocation = int(input("\nMasukkan nomor stasiun awal: "))
+    startLocation = int(input("\nMasukkan nomor stasiun awal: ")) 
     while startLocation < 1 or startLocation > 13:
         print("\nInput tidak valid!")
         startLocation = int(input("\nMasukkan Nomor Stasiun Awal"))
@@ -114,8 +115,8 @@ def gate(idCard, cards):
     
     #penyajian data
     print(f"\nAnda telah menempuh perjalan sejauh {jarak_ditempuh} km")
-    print(f"Total tarif perjalan anda: Rp.{price},00")
-    print(f"Saldo akhir kartu E-Money anda (ID {idCard}): Rp.{cards[cardIndex][1]},00")
+    print(f"Total tarif perjalan anda: Rp{price},00")
+    print(f"Saldo akhir kartu E-Money anda (ID {idCard}): Rp{cards[cardIndex][1]},00")
     print("\nTerima Kasih telah menggunakan layanan MRT")
     print("Sampai jumpa di perjalanan berikutnya")
 
@@ -143,7 +144,7 @@ def main(cards):
                   "11. Setiabudi Astra\n"
                   "12. Dukuh Atas BNI\n"
                   "13. Bundaran HI")
-            print("\nMohon Masukkan ID Kartu E Money Anda Untuk Masuk: ")
+            print("\nMohon Masukkan ID card Anda Untuk Masuk: ")
             idCard = int(input("ID Card: "))
 
             cardStatus, cards = cardReader(idCard, cards)
@@ -153,7 +154,7 @@ def main(cards):
             else:
                 print(cardStatus[1])
         elif inp == "2":
-            cekntopup(cards)
+            cekntopup_card(cards)
         else:
             print("\nTerima Kasih Telah Menggunakan Layanan MRT")
             break
