@@ -37,7 +37,7 @@ def hari_apa (hari_hari):
 
 # Algoritma
 stations = ["Lebak Bulus Grab", "Fatmawati", "Cipete Raya", "Haji Nawi", "Blok A", "Blok M BCA", "ASEAN", "Senayan", "Istora Mandiri", "Bendungan Hilir", "Setiabudi Astra", "Dukuh Atas BNI", "Bundaran HI"] #array stasiun mrt
-indeks = [160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 197, 199, 198] #array nim TPB
+list_nim_tpb = [160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 197, 199, 198, 196] #array nim TPB
 cards = [] #database id kartu dan saldonya
 
 # fungsi pembantu
@@ -60,8 +60,8 @@ def findCardIndex(cards, cardID): #input array cards dan id card, output index i
 # untuk memasukkan data id kartu dan saldo awal (check isValid)
 def kartuvalid(nomor_unik): #menentukan apakah 3 digit pertama id kartu merupakan nim tpb
     ada = False
-    for i in range(0, len(indeks)):
-        if nomor_unik == indeks[i]:
+    for i in range(0, len(list_nim_tpb)):
+        if nomor_unik == list_nim_tpb[i]:
             ada = True
     return ada #output boolean (True / False) apakah kartu valid
 
@@ -195,7 +195,7 @@ def main(cards):
             if cardStatus[0]:
                 # lanjut ke fungsi gate
                 today_day = hari_apa(hari_hari)
-                gate(idCard, cards, indeks, today_day)
+                gate(idCard, cards, list_nim_tpb, today_day)
             else:
                 print(cardStatus[1])
         elif inp == "2":
