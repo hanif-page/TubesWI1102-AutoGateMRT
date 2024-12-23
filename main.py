@@ -6,10 +6,38 @@
 # - Tarif perjalanan adalah Rp4000 per 10km, artinya Rp800 per 2km
 # - Saldo minimum (untuk menempuh seluruh stasiun, yaitu 12 stasiun) yang dibutuhkan pada kartu adalah Rp14000
 
+#Import Modul
+
+hari_hari = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu']
+
+def turunin (kata): #fungsi lower.() handmade
+    konsonan = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    non_konsonan = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'x']
+    result = ''
+    for i in kata:
+        if i not in konsonan:
+            result += i
+        else:
+            for j in range(25):
+                if i == konsonan[j]:
+                    result += non_konsonan[j]
+    return result
+
+def hari_apa (hari_hari):
+    hari = turunin(input("Masukkan hari ini hari apa: "))
+    while hari not in hari_hari: #jika input tidak valid
+        print("hari yang dimasukkan invalid, masukkan lagi")
+        hari = turunin(input("\nmasukkan hari ini hari apa: "))
+
+    today_day = 0 #hari ini dalam bentuk angka
+    for i in range(7): #looping untuk menentukan hari dalam bentuk angka
+        if hari == hari_hari[i]:
+            today_day == i
+    return today_day
+
 # Algoritma
-stations = ["Lebak Bulus Grab", "Fatmawati", "Cipete Raya", "Haji Nawi", "Blok A", "Blok M BCA", "ASEAN", "Senayan",
-                "Istora Mandiri", "Bendungan Hilir", "Setiabudi Astra", "Dukuh Atas BNI", "Bundaran HI"] #array stasiun mrt
-indeks = [161,198,162,165,190,199,196] #array nim TPB
+stations = ["Lebak Bulus Grab", "Fatmawati", "Cipete Raya", "Haji Nawi", "Blok A", "Blok M BCA", "ASEAN", "Senayan", "Istora Mandiri", "Bendungan Hilir", "Setiabudi Astra", "Dukuh Atas BNI", "Bundaran HI"] #array stasiun mrt
+indeks = [160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 197, 199, 198] #array nim TPB
 cards = [] #database id kartu dan saldonya
 
 # fungsi pembantu
@@ -86,7 +114,18 @@ def cardReader(idCard, cards):
     else:
         return [False, "\nKartu belum terdaftar"], cards
 
-def gate(idCard, cards):
+def tarifKhusus(idCard, list_nim_tpb, day):
+    awalan_nim = idCard // 100000
+    for i in range(0, len(list_nim_tpb)):
+        if list_nim_tpb[i] == awalan_nim:
+            index = i
+    if index//2 == day:
+        return "diskon 10%"
+    else:
+        return "gak diskon"
+
+def gate(idCard, cards, list_nim_tpb, day):
+    diskon = tarifKhusus(idCard, list_nim_tpb, day)
     startLocation = int(input("\nMasukkan nomor stasiun awal: ")) 
     while startLocation < 1 or startLocation > 13:
         print("\nInput tidak valid!")
@@ -109,7 +148,12 @@ def gate(idCard, cards):
     jarak_ditempuh = abs(endLocation-startLocation)*2 #asumsikan jarak antar stasiun 2 km
     tarif_awal = 3200
 
-    price= jarak_ditempuh*price_per_km + tarif_awal #menentukan tarif
+    if diskon == "diskon 10%":
+        print("\nAnda mendapat diskon 10%!")
+        price= (jarak_ditempuh*price_per_km + tarif_awal)*0.9 #menentukan tarif
+    elif diskon == "gak diskon":
+        price= (jarak_ditempuh*price_per_km + tarif_awal)
+
     cardIndex = findCardIndex(cards, idCardExit)#mencari index kartu di database
     cards[cardIndex][1] -= price #mengurangi saldo kartu
     
@@ -150,7 +194,8 @@ def main(cards):
             cardStatus, cards = cardReader(idCard, cards)
             if cardStatus[0]:
                 # lanjut ke fungsi gate
-                gate(idCard, cards)
+                today_day = hari_apa(hari_hari)
+                gate(idCard, cards, indeks, today_day)
             else:
                 print(cardStatus[1])
         elif inp == "2":
